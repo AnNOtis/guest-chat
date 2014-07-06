@@ -27,6 +27,12 @@ $(document).on 'page:change', () ->
         $('#messages').append('<div class="row message" data-message-id="'+message.id+'"> <div class="col-sm-2"> <span class="label label-'+color+'">'+message.guest.name+'</span> </div> <div class="col-sm-10">'+message.content+'</div> </div>')
         code_block = $('[data-message-id="'+message.id+'"] pre code')[0]
         hljs.highlightBlock code_block if code_block
+        if messages.length == 1
+          notification =  new Notification(message.guest.name, body: message.content) if Notification && Notification.permission == "granted"
+          notification.addEventListener 'show', () ->
+            setTimeout () ->
+              notification.close()
+            , 1000
       $('#messages').scrollTop($('#messages')[0].scrollHeight) if scroll_flag && is_btm
     .always () ->
       setTimeout(pull_messages, 1000)
